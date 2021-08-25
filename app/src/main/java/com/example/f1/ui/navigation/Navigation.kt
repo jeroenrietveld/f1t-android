@@ -14,8 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.sharp.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,6 +60,7 @@ enum class NavigationSections(
 
 fun NavGraphBuilder.addHomeGraph(
     navController: NavController,
+    onClickTelemetrySession: (Long, NavBackStackEntry) -> Unit,
     modifier: Modifier = Modifier
 ) {
     composable(NavigationSections.HOME.route) { from ->
@@ -69,10 +68,12 @@ fun NavGraphBuilder.addHomeGraph(
     }
     composable(NavigationSections.TELEMETRY.route) { from ->
         Telemetry(
+            // TODO: consistency in Session/TelemetrySession use
             onClickNewSession = {
                 navController.navigate(MainDestinations.NEW_TELEMETRY_SESSION_ROUTE)
             },
-            modifier
+            onClickTelemetrySession = { id -> onClickTelemetrySession(id, from) },
+            modifier = modifier
         )
     }
 }

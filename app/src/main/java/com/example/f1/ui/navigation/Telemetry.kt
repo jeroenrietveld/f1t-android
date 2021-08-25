@@ -9,21 +9,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.f1.ui.MainDestinations
 import com.example.f1.ui.components.TelemetrySessions
 import com.example.f1.ui.theme.F1Theme
 import com.google.accompanist.insets.statusBarsHeight
 
 @Composable
-fun Telemetry(onClickNewSession: () -> Unit, modifier: Modifier = Modifier) {
+fun Telemetry(
+    onClickNewSession: () -> Unit,
+    onClickTelemetrySession: (Long) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Surface(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.padding(24.dp)) {
             Spacer(Modifier.statusBarsHeight(additional = 24.dp))
@@ -34,7 +35,7 @@ fun Telemetry(onClickNewSession: () -> Unit, modifier: Modifier = Modifier) {
                 modifier = Modifier.height(96.dp)
             )
 
-            TelemetrySessions()
+            TelemetrySessions(onClickTelemetrySession = onClickTelemetrySession)
         }
     }
 }
@@ -108,6 +109,6 @@ fun NewTelemetrySession(
 @Composable
 fun TelemetryPreview() {
     F1Theme {
-        Telemetry(onClickNewSession = { })
+        Telemetry(onClickNewSession = {}, onClickTelemetrySession = {})
     }
 }

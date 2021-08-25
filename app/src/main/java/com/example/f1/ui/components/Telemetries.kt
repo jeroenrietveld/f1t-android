@@ -12,7 +12,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,39 +20,54 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.f1.model.TelemetrySession
 import com.example.f1.model.TelemetrySessionRepo
-import com.example.f1.ui.navigation.Telemetry
 import com.example.f1.ui.theme.F1Theme
 
 @Composable
-fun TelemetrySessions(modifier: Modifier = Modifier) {
+fun TelemetrySessions(modifier: Modifier = Modifier, onClickTelemetrySession: (Long) -> Unit) {
     val telemetrySessions = TelemetrySessionRepo.getTelemetrySessions()
-    TelemetrySessions(modifier = modifier, telemetrySessions = telemetrySessions)
+    TelemetrySessions(
+        modifier = modifier,
+        telemetrySessions = telemetrySessions,
+        onClickTelemetrySession = onClickTelemetrySession
+    )
 }
 
 @Composable
-private fun TelemetrySessions(modifier: Modifier, telemetrySessions: List<TelemetrySession>) {
+private fun TelemetrySessions(
+    modifier: Modifier,
+    telemetrySessions: List<TelemetrySession>,
+    onClickTelemetrySession: (Long) -> Unit
+) {
     Column() {
         Text(text = "Sessions", style = MaterialTheme.typography.h3)
 
         LazyColumn(modifier = modifier) {
             items(telemetrySessions) { session ->
-                TelemetrySessionItem(modifier = Modifier.height(72.dp), session = session)
+                TelemetrySessionItem(
+                    modifier = Modifier.height(72.dp),
+                    session = session,
+                    onClickTelemetrySession = onClickTelemetrySession
+                )
             }
         }
     }
 }
 
 @Composable
-private fun TelemetrySessionItem(modifier: Modifier = Modifier, session: TelemetrySession) {
+private fun TelemetrySessionItem(
+    session: TelemetrySession,
+    onClickTelemetrySession: (Long) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Surface(
         elevation = 0.dp,
         shape = RoundedCornerShape(
-            topStart = 6.dp, topEnd = 36.dp, bottomStart = 36.dp, bottomEnd = 24.dp
+            topStart = 6.dp, topEnd = 36.dp, bottomStart = 36.dp, bottomEnd = 18.dp
         ),
         modifier = modifier,
         color = MaterialTheme.colors.secondary
     ) {
-        Row(modifier = modifier.clickable(onClick = {})) {
+        Row(modifier = modifier.clickable(onClick = { onClickTelemetrySession(session.id) })) {
             Icon(
                 imageVector = Icons.Default.Add,
                 tint = MaterialTheme.colors.secondary,
@@ -77,21 +91,30 @@ private fun TelemetrySessionItem(modifier: Modifier = Modifier, session: Telemet
                         .padding(bottom = 4.dp)
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Rounded.AddCircle,
-                        tint = MaterialTheme.colors.primary,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp)
-                    )
                     Text(
-                        text = "Text",
-                        color = MaterialTheme.colors.primary,
+                        text = "${session.laps.size} laps",
                         style = MaterialTheme.typography.caption,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
-                            .padding(start = 8.dp)
                             .weight(1f)
-                            .wrapContentWidth(Alignment.Start)
+                            .padding(bottom = 4.dp)
                     )
+//                    Icon(
+//                        imageVector = Icons.Rounded.AddCircle,
+//                        tint = MaterialTheme.colors.primary,
+//                        contentDescription = null,
+//                        modifier = Modifier.size(16.dp)
+//                    )
+//                    Text(
+//                        text = "Text",
+//                        color = MaterialTheme.colors.primary,
+//                        style = MaterialTheme.typography.caption,
+//                        modifier = Modifier
+//                            .padding(start = 8.dp)
+//                            .weight(1f)
+////                            .wrapContentWidth(Alignment.Start)
+//                    )
                 }
             }
         }
@@ -103,6 +126,6 @@ private fun TelemetrySessionItem(modifier: Modifier = Modifier, session: Telemet
 @Composable
 fun TelemetryPreview() {
     F1Theme {
-        TelemetrySessions()
+        TelemetrySessions(onClickTelemetrySession = {})
     }
 }
